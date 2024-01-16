@@ -1,44 +1,36 @@
 import React, {useState} from 'react';
-import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
+import { Modal, StyleSheet, Text, Pressable, View } from 'react-native';
 
 export default function App() {
-  const [showOriginal, setShowOriginal] = useState(true);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);  // a state variable to set visibility on different components
 
-  const toggleVisibility = () => {
-    setShowOriginal(!showOriginal);
+  const toggleVisibility = () => {                   // function for toggling visibility
+    setIsVisible(!isVisible);                        // setIsVisible is a function that toggles the value it has been given
   };
-  
+
   return (
     <View style={styles.centeredView}>
-      <Pressable
-        style={[styles.button, styles.buttonOpen]}
-        onPress={() => {
-          setModalVisible(true);
-          toggleVisibility();
-        }}>
-        <Text style={styles.textStyle}>Show Modal Message</Text>
-      </Pressable>
-      <Modal
-        animationType="slide"
+      {isVisible && (                                //  Here the 'Pressable' button is being rendered but only if isVisible is true.
+        <Pressable
+          style={[styles.button, styles.buttonOpen]}
+          onPress={() => toggleVisibility()}>        
+          <Text style={styles.textStyle}>Show Modal Message</Text>
+        </Pressable>
+      )}
+
+      
+      <Modal                                        //  nothing special here. The "onRequestClose" is a function which is called when the user tries to close the modal
+        animationType="slide"                       //  (like using the device's back button) 
         transparent={true}
-        visible={modalVisible}
+        visible={!isVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
           toggleVisibility();
         }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>This is modal</Text>
-            <Pressable
-              onPress={() => {
-                setModalVisible(true);
-                toggleVisibility();
-              }}>
-              <Text style={styles.textStyle}>Close</Text>
-            </Pressable>
-          </View>
+        <View style={styles.modalView}>          
+          <Text style={styles.modalText}>This is modal</Text>
+          <Pressable onPress={() => toggleVisibility()}>
+            <Text style={styles.textStyle}>Close</Text>
+          </Pressable>
         </View>
       </Modal>
     </View>
@@ -52,10 +44,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 22,
   },
-  modalView: {
-    width: '100%',
+  modalView: {             
+    width: '100%',                                  
     position: 'absolute',
-    top: 60,
+    top: 40,
     backgroundColor: 'lightgrey',
     padding: 80,
     alignItems: 'center',
